@@ -1,10 +1,15 @@
 package com.jacksondelima.taskflow.service;
 
-import com.jacksondelima.taskflow.dto.auth.*;
+import com.jacksondelima.taskflow.dto.auth.AuthResponseDTO;
+import com.jacksondelima.taskflow.dto.auth.LoginRequestDTO;
+import com.jacksondelima.taskflow.dto.auth.RegisterRequestDTO;
 import com.jacksondelima.taskflow.entity.User;
 import com.jacksondelima.taskflow.enums.Role;
 import com.jacksondelima.taskflow.repository.UserRepository;
+import com.jacksondelima.taskflow.security.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +19,8 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     public void register(RegisterRequestDTO request) {
 
@@ -31,15 +38,15 @@ public class AuthService {
         userRepository.save(user);
     }
 
-    public void login(LoginRequestDTO request) {
+    public AuthResponseDTO login(LoginRequestDTO request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.email(),
+                        request.password()
+                )
+        );
 
-        User user = userRepository.findByEmail(request.email())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-
-        if (!passwordEncoder.matches(request.password(), user.getPassword())) {
-            throw new RuntimeException("Senha inválida");
-        }
-
-        // JWT ainda vamos implementar
+        String token = jwtService.generateToken(request.email());
+        return new AuthResponseDTO(token);
     }
 }

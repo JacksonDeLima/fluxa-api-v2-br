@@ -1,5 +1,6 @@
 package com.jacksondelima.taskflow.controller;
 
+import com.jacksondelima.taskflow.dto.auth.AuthResponseDTO;
 import com.jacksondelima.taskflow.dto.auth.LoginRequestDTO;
 import com.jacksondelima.taskflow.dto.auth.RegisterRequestDTO;
 import com.jacksondelima.taskflow.service.AuthService;
@@ -21,8 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequestDTO request) {
-        authService.login(request);
-        return ResponseEntity.ok("Login ok (sem JWT ainda)");
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginRequestDTO request) {
+        return ResponseEntity.ok(authService.login(request));
     }
 }
