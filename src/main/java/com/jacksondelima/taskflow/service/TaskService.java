@@ -31,7 +31,6 @@ public class TaskService {
                 .build();
 
         Task savedTask = taskRepository.save(task);
-
         return mapToResponse(savedTask);
     }
 
@@ -42,6 +41,49 @@ public class TaskService {
                 .stream()
                 .map(this::mapToResponse)
                 .toList();
+    }
+
+    public TaskResponseDTO getTaskById(Long id) {
+        User user = getAuthenticatedUser();
+
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tarefa não encontrada"));
+
+        if (!task.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Acesso negado");
+        }
+
+        return mapToResponse(task);
+    }
+
+    public TaskResponseDTO updateTask(Long id, TaskRequestDTO request) {
+        User user = getAuthenticatedUser();
+
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tarefa não encontrada"));
+
+        if (!task.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Acesso negado");
+        }
+
+        task.setTitle(request.title());
+        task.setDescription(request.description());
+
+        Task updated = taskRepository.save(task);
+        return mapToResponse(updated);
+    }
+
+    public void deleteTask(Long id) {
+        User user = getAuthenticatedUser();
+
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tarefa não encontrada"));
+
+        if (!task.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Acesso negado");
+        }
+
+        taskRepository.delete(task);
     }
 
     private User getAuthenticatedUser() {

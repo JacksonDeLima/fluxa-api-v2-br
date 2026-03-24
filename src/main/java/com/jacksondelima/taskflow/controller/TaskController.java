@@ -26,4 +26,23 @@ public class TaskController {
     public ResponseEntity<List<TaskResponseDTO>> getMyTasks() {
         return ResponseEntity.ok(taskService.getMyTasks());
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TaskResponseDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(taskService.getTaskById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskResponseDTO> update(
+            @PathVariable Long id,
+            @RequestBody @Valid TaskRequestDTO request
+    ) {
+        return ResponseEntity.ok(taskService.updateTask(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        return ResponseEntity.ok("Tarefa deletada com sucesso");
+    }
 }
