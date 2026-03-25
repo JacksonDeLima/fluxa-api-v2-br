@@ -8,7 +8,7 @@
 
 Uma API REST robusta desenvolvida com **Java** e **Spring Boot** para o gerenciamento de tarefas e usuários. O sistema conta com autenticação segura via **JWT**, controle de acesso baseado em perfis (Roles) e persistência de dados utilizando **PostgreSQL**.
 
-## 🚀 Funcionalidades
+##  Funcionalidades
 
 - **Autenticação e Autorização**: Registro e login de usuários com geração de tokens JWT de forma *stateless*.
 - **Controle de Acesso**: Proteção de rotas baseada em perfis de acesso (`ADMIN` e `USER`).
@@ -17,7 +17,7 @@ Uma API REST robusta desenvolvida com **Java** e **Spring Boot** para o gerencia
 - **Tratamento de Exceções**: Padronização global de erros para respostas consistentes (usando `@RestControllerAdvice`).
 - **Documentação Interativa**: Interface do Swagger (OpenAPI) disponível para testes e visualização dos endpoints.
 
-## 🛠️ Tecnologias Utilizadas
+##  Tecnologias Utilizadas
 
 - **Linguagem**: Java 17
 - **Framework**: Spring Boot (Web, Data JPA, Security, Validation)
@@ -27,7 +27,7 @@ Uma API REST robusta desenvolvida com **Java** e **Spring Boot** para o gerencia
 - **Documentação**: Swagger (SpringDoc OpenAPI)
 - **Utilitários**: Lombok, Docker Compose
 
-## ⚙️ Como executar localmente
+##  Como executar localmente
 
 ### Pré-requisitos
 - Java 17+
@@ -46,13 +46,13 @@ docker compose up -d
 
 A API estará disponível em `http://localhost:8080`.
 
-## 📖 Documentação da API (Swagger)
+##  Documentação da API (Swagger)
 
 Com a aplicação em execução, acesse a interface do Swagger para explorar e testar os endpoints:
 
 👉 **[http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)**
 
-## 🔐 Endpoints Principais
+##  Endpoints Principais
 
 * **Auth**: `/auth/register` | `/auth/login`
 * **Tarefas**: `/tasks` (GET, POST) | `/tasks/{id}` (GET, PUT, DELETE)
