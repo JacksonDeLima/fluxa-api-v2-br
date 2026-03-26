@@ -87,7 +87,8 @@ graph TD
         G[PostgreSQL via Docker]
     end
 
-    A -- HTTP/S Request --> B & F
+    A -- HTTP/S Request --> B
+    A -- HTTP/S Request --> F
     B -- Autenticacao --> C
     B -- Delega para --> D
     D -- Persistencia --> E
