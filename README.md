@@ -72,19 +72,19 @@ Com a aplicacao em execucao:
 ```mermaid
 graph TD
     subgraph "Cliente"
-        A[Browser do Usuario]
+        A["Browser do Usuario"]
     end
 
     subgraph "Fluxa API (Backend - Spring Boot)"
-        B[Endpoints REST]
-        C[Spring Security + JWT]
-        D[Camada de Servico]
-        E[Spring Data JPA]
-        F[Arquivos Estaticos (UI)]
+        B["Endpoints REST"]
+        C["Spring Security + JWT"]
+        D["Camada de Servico"]
+        E["Spring Data JPA"]
+        F["Arquivos Estaticos (UI)"]
     end
 
     subgraph "Banco de Dados"
-        G[PostgreSQL via Docker]
+        G["PostgreSQL via Docker"]
     end
 
     A -- HTTP/S Request --> B
