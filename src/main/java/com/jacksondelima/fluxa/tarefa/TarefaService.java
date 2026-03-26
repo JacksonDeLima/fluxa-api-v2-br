@@ -4,7 +4,9 @@ import com.jacksondelima.fluxa.tarefa.dto.TarefaRequestDTO;
 import com.jacksondelima.fluxa.tarefa.dto.TarefaResponseDTO;
 import com.jacksondelima.fluxa.usuario.Usuario;
 import com.jacksondelima.fluxa.usuario.UsuarioRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -65,15 +67,15 @@ public class TarefaService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         return usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario autenticado nao encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário autenticado não encontrado."));
     }
 
     private Tarefa buscarTarefaDoUsuario(Long id, Usuario usuario) {
         Tarefa tarefa = tarefaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tarefa nao encontrada."));
+                .orElseThrow(() -> new EntityNotFoundException("Tarefa não encontrada."));
 
         if (!tarefa.getUsuario().getId().equals(usuario.getId())) {
-            throw new RuntimeException("Acesso negado.");
+            throw new AccessDeniedException("Acesso negado para esta tarefa.");
         }
 
         return tarefa;

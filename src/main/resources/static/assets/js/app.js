@@ -257,7 +257,8 @@ async function loadProfileAndData() {
     }
 
     try {
-        state.userEmail = await api("/usuarios/eu");
+        const usuarioResponse = await api("/usuarios/eu");
+        state.userEmail = usuarioResponse.email || usuarioResponse;
         state.tasks = await api("/tarefas");
     } catch (error) {
         state.token = "";
