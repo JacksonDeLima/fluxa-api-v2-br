@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluxa API</title>
+    <meta
+            name="description"
+            content="Portal da Fluxa API com documentacao, pagina do produto, painel de tarefas e area administrativa."
+    >
+    <link rel="stylesheet" href="/assets/css/app.css">
+</head>
+<body>
+<div class="page-shell">
+    <div class="ambient-glow ambient-glow-left"></div>
+    <div class="ambient-glow ambient-glow-right"></div>
+
+    <header class="topbar">
+        <a class="brand" href="#inicio">
+            <span class="brand-mark">F</span>
+            <span class="brand-copy">
+                <strong>Fluxa API</strong>
+                <small>gestao de tarefas com identidade de produto</small>
+            </span>
+        </a>
+
+        <nav class="topnav">
+            <a href="#produto">Produto</a>
+            <a href="#documentacao">Documentacao</a>
+            <a href="#painel">Painel</a>
+        </nav>
+
+        <div class="topbar-actions">
+            <a class="ghost-button" href="/swagger-ui.html" target="_blank" rel="noreferrer">Swagger</a>
+            <button class="primary-button" type="button" data-scroll-target="#painel">Entrar no painel</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero section" id="inicio">
+            <div class="hero-copy reveal">
+                <span class="eyebrow">Fluxa API</span>
+                <h1>Uma API projetada para operacao real.</h1>
+                <p>
+                    A Fluxa combina autenticacao JWT, gestao de tarefas, painel administrativo e
+                    um portal de documentacao pensado para quem constroi, opera e apresenta software.
+                </p>
+
+                <div class="hero-actions">
+                    <button class="primary-button" type="button" data-scroll-target="#documentacao">
+                        Explorar documentacao
+                    </button>
+                    <button class="secondary-button" type="button" data-scroll-target="#painel">
+                        Abrir workspace
+                    </button>
+                </div>
+
+                <div class="hero-signals">
+                    <div class="signal-card">
+                        <strong>JWT e Spring Security</strong>
+                        <span>Autenticacao, autorizacao e perfis em um fluxo direto.</span>
+                    </div>
+                    <div class="signal-card">
+                        <strong>Workspace integrado</strong>
+                        <span>Login, cadastro, tarefas e administracao na mesma interface.</span>
+                    </div>
+                    <div class="signal-card">
+                        <strong>Docs em tempo real</strong>
+                        <span>O portal consome o OpenAPI da propria aplicacao.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-panel reveal">
+                <div class="hero-panel-head">
+                    <span class="status-pill status-live">ao vivo em localhost:8080</span>
+                    <span class="status-pill">design system Fluxa</span>
+                </div>
+
+                <div class="hero-metrics">
+                    <article>
+                        <span>Fluxo principal</span>
+                        <strong>Cadastro, login e tarefas</strong>
+                    </article>
+                    <article>
+                        <span>Area administrativa</span>
+                        <strong>Usuarios e tarefas do sistema</strong>
+                    </article>
+                    <article>
+                        <span>Portal tecnico</span>
+                        <strong>OpenAPI, endpoints e exemplos</strong>
+                    </article>
+                </div>
+
+                <div class="hero-code">
+<pre><code>POST /autenticacao/login
+GET  /tarefas
+POST /tarefas
+GET  /administracao/usuarios</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="section spotlight-grid" id="produto">
+            <article class="spotlight-card reveal">
+                <span class="spotlight-index">01</span>
+                <h2>Portal de documentacao</h2>
+                <p>Documentacao viva com identidade visual, navegacao por tags e acesso rapido ao Swagger.</p>
+            </article>
+            <article class="spotlight-card reveal">
+                <span class="spotlight-index">02</span>
+                <h2>Painel de tarefas</h2>
+                <p>Workspace simples e objetivo para criar, editar, listar e remover tarefas do usuario autenticado.</p>
+            </article>
+            <article class="spotlight-card reveal">
+                <span class="spotlight-index">03</span>
+                <h2>Painel administrativo</h2>
+                <p>Visao consolidada de usuarios e tarefas para perfis com permissao administrativa.</p>
+            </article>
+        </section>
+
+        <section class="section docs-section" id="documentacao">
+            <div class="section-header reveal">
+                <div>
+                    <span class="eyebrow">Portal tecnico</span>
+                    <h2>Documentacao pensada para onboarding rapido.</h2>
+                </div>
+                <div class="section-actions">
+                    <a class="ghost-button" href="/v3/api-docs" target="_blank" rel="noreferrer">OpenAPI JSON</a>
+                    <a class="primary-button" href="/swagger-ui.html" target="_blank" rel="noreferrer">Abrir Swagger</a>
+                </div>
+            </div>
+
+            <div class="docs-layout">
+                <article class="docs-quickstart reveal">
+                    <h3>Primeiros passos</h3>
+                    <ol class="flow-list">
+                        <li>Cadastre um usuario ou acesse com um token ja existente.</li>
+                        <li>Use o token Bearer para criar e consultar tarefas.</li>
+                        <li>Se tiver perfil administrativo, habilite os paineis de governanca.</li>
+                    </ol>
+
+<pre><code>curl -X POST http://localhost:8080/autenticacao/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"voce@fluxa.com","senha":"123456"}'</code></pre>
+                </article>
+
+                <article class="docs-reference reveal">
+                    <div class="docs-reference-head">
+                        <h3>Referencia de endpoints</h3>
+                        <span id="docs-status" class="inline-note">carregando openapi...</span>
+                    </div>
+                    <div id="docs-groups" class="docs-groups"></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section workspace-section" id="painel">
+            <div class="section-header reveal">
+                <div>
+                    <span class="eyebrow">Workspace Fluxa</span>
+                    <h2>Operacao diaria em uma interface unica.</h2>
+                </div>
+                <div class="session-strip">
+                    <span id="session-badge" class="status-pill">nao autenticado</span>
+                    <button id="logout-button" class="ghost-button" type="button" hidden>Sair</button>
+                </div>
+            </div>
+
+            <div class="workspace-grid">
+                <aside class="auth-column reveal">
+                    <article class="auth-card">
+                        <div class="panel-heading">
+                            <h3>Acesso rapido</h3>
+                            <p>Entre com sua conta ou crie um novo usuario para testar o fluxo real da API.</p>
+                        </div>
+
+                        <form id="login-form" class="stack-form">
+                            <h4>Login</h4>
+                            <label>
+                                <span>E-mail</span>
+                                <input type="email" name="email" placeholder="voce@fluxa.com" required>
+                            </label>
+                            <label>
+                                <span>Senha</span>
+                                <input type="password" name="senha" placeholder="123456" required>
+                            </label>
+                            <button class="primary-button" type="submit">Entrar</button>
+                        </form>
+
+                        <form id="register-form" class="stack-form">
+                            <h4>Criar conta</h4>
+                            <label>
+                                <span>Nome</span>
+                                <input type="text" name="nome" placeholder="Maria Silva" required>
+                            </label>
+                            <label>
+                                <span>E-mail</span>
+                                <input type="email" name="email" placeholder="maria@fluxa.com" required>
+                            </label>
+                            <label>
+                                <span>Senha</span>
+                                <input type="password" name="senha" placeholder="minimo 6 caracteres" required>
+                            </label>
+                            <button class="secondary-button" type="submit">Cadastrar</button>
+                        </form>
+
+                        <div id="auth-feedback" class="feedback-panel muted">
+                            Use seu token para habilitar tarefas, administracao e chamadas autenticadas.
+                        </div>
+                    </article>
+                </aside>
+
+                <div class="workspace-main">
+                    <section class="workspace-panels reveal">
+                        <div class="stats-row">
+                            <article class="metric-card">
+                                <span>Usuario atual</span>
+                                <strong id="user-email">aguardando autenticacao</strong>
+                            </article>
+                            <article class="metric-card">
+                                <span>Total de tarefas</span>
+                                <strong id="tasks-count">0</strong>
+                            </article>
+                            <article class="metric-card">
+                                <span>Acesso administrativo</span>
+                                <strong id="admin-state">indisponivel</strong>
+                            </article>
+                        </div>
+
+                        <div class="panel-shell">
+                            <div class="panel-heading">
+                                <h3>Painel de tarefas</h3>
+                                <p>Crie tarefas, revise o backlog e atualize descricoes sem sair do portal.</p>
+                            </div>
+
+                            <form id="task-form" class="task-form">
+                                <input type="hidden" name="id">
+                                <label>
+                                    <span>Titulo</span>
+                                    <input type="text" name="titulo" placeholder="Preparar apresentacao semanal" required>
+                                </label>
+                                <label>
+                                    <span>Descricao</span>
+                                    <textarea name="descricao" rows="4" placeholder="Descreva o objetivo e o contexto da tarefa." required></textarea>
+                                </label>
+                                <div class="task-form-actions">
+                                    <button class="primary-button" type="submit">Salvar tarefa</button>
+                                    <button id="task-cancel" class="ghost-button" type="button" hidden>Cancelar edicao</button>
+                                </div>
+                            </form>
+
+                            <div id="tasks-feedback" class="feedback-panel muted">
+                                Entre para carregar suas tarefas.
+                            </div>
+
+                            <div id="tasks-list" class="task-list"></div>
+                        </div>
+
+                        <div class="panel-shell">
+                            <div class="panel-heading">
+                                <h3>Painel administrativo</h3>
+                                <p>Visao consolidada de usuarios e tarefas para perfis autorizados.</p>
+                            </div>
+
+                            <div id="admin-feedback" class="feedback-panel muted">
+                                O painel administrativo fica disponivel quando o token tem permissao de administrador.
+                            </div>
+
+                            <div id="admin-content" class="admin-layout" hidden>
+                                <div class="admin-block">
+                                    <div class="admin-block-head">
+                                        <h4>Usuarios do sistema</h4>
+                                        <span id="admin-users-count" class="inline-note">0 usuarios</span>
+                                    </div>
+                                    <div class="table-shell">
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th>Nome</th>
+                                                <th>E-mail</th>
+                                                <th>Perfil</th>
+                                                <th>Criado em</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="admin-users-body"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="admin-block">
+                                    <div class="admin-block-head">
+                                        <h4>Tarefas do sistema</h4>
+                                        <span id="admin-tasks-count" class="inline-note">0 tarefas</span>
+                                    </div>
+                                    <div class="table-shell">
+                                        <table>
+                                            <thead>
+                                            <tr>
+                                                <th>Titulo</th>
+                                                <th>Status</th>
+                                                <th>Usuario</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="admin-tasks-body"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel-shell">
+                            <div class="panel-heading">
+                                <h3>Console de integracao</h3>
+                                <p>Resumo do estado da sessao para apoiar testes e demonstracoes.</p>
+                            </div>
+
+                            <div class="console-grid">
+                                <article>
+                                    <span>Token atual</span>
+                                    <code id="token-preview">nenhum token armazenado</code>
+                                </article>
+                                <article>
+                                    <span>OpenAPI</span>
+                                    <code id="openapi-preview">sincronizando especificacao</code>
+                                </article>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <span>Fluxa API</span>
+        <span id="current-year"></span>
+    </footer>
+</div>
+
+<script src="/assets/js/app.js"></script>
+</body>
+</html>

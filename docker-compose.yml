@@ -1,9 +1,9 @@
 services:
   postgres:
     image: postgres:16
-    container_name: taskflow-postgres
+    container_name: fluxa-db
     environment:
-      POSTGRES_DB: taskflow
+      POSTGRES_DB: fluxa
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:

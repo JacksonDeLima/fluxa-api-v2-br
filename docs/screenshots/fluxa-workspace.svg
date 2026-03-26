@@ -1,0 +1,49 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" fill="#07111F"/>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <rect x="56" y="40" width="1168" height="56" rx="28" fill="#08182C" stroke="#1D4457"/>
+  <text x="88" y="74" fill="#EDF7F3" font-size="22" font-family="Arial, sans-serif" font-weight="700">Fluxa API</text>
+  <rect x="78" y="126" width="344" height="530" rx="28" fill="#0D213B" stroke="#1D4457"/>
+  <text x="108" y="174" fill="#EDF7F3" font-size="30" font-family="Arial, sans-serif" font-weight="700">Acesso rapido</text>
+  <text x="108" y="204" fill="#A7C1BB" font-size="17" font-family="Arial, sans-serif">Login e cadastro para validar o fluxo real da API.</text>
+  <text x="108" y="258" fill="#EDF7F3" font-size="20" font-family="Arial, sans-serif" font-weight="700">Login</text>
+  <rect x="108" y="280" width="284" height="52" rx="14" fill="#08131F" stroke="#2A4256"/>
+  <rect x="108" y="346" width="284" height="52" rx="14" fill="#08131F" stroke="#2A4256"/>
+  <rect x="108" y="418" width="196" height="46" rx="23" fill="#80E2D0"/>
+  <text x="175" y="447" fill="#05202D" font-size="20" font-family="Arial, sans-serif" font-weight="700">Entrar</text>
+  <rect x="108" y="496" width="284" height="1" fill="#1D4457"/>
+  <text x="108" y="536" fill="#EDF7F3" font-size="20" font-family="Arial, sans-serif" font-weight="700">Criar conta</text>
+  <rect x="108" y="560" width="284" height="52" rx="14" fill="#08131F" stroke="#2A4256"/>
+  <rect x="452" y="126" width="750" height="164" rx="28" fill="#0D213B" stroke="#1D4457"/>
+  <text x="484" y="174" fill="#80E2D0" font-size="15" font-family="Arial, sans-serif" font-weight="700" letter-spacing="3">WORKSPACE FLUXA</text>
+  <text x="484" y="232" fill="#EDF7F3" font-size="46" font-family="Arial, sans-serif" font-weight="700">Operacao diaria em uma interface unica.</text>
+  <rect x="484" y="326" width="214" height="104" rx="22" fill="#112944"/>
+  <rect x="720" y="326" width="214" height="104" rx="22" fill="#112944"/>
+  <rect x="956" y="326" width="214" height="104" rx="22" fill="#112944"/>
+  <text x="508" y="360" fill="#A7C1BB" font-size="14" font-family="Arial, sans-serif">Usuario atual</text>
+  <text x="508" y="396" fill="#EDF7F3" font-size="28" font-family="Arial, sans-serif" font-weight="700">demo@fluxa.local</text>
+  <text x="744" y="360" fill="#A7C1BB" font-size="14" font-family="Arial, sans-serif">Total de tarefas</text>
+  <text x="744" y="396" fill="#EDF7F3" font-size="28" font-family="Arial, sans-serif" font-weight="700">8</text>
+  <text x="980" y="360" fill="#A7C1BB" font-size="14" font-family="Arial, sans-serif">Acesso administrativo</text>
+  <text x="980" y="396" fill="#EDF7F3" font-size="28" font-family="Arial, sans-serif" font-weight="700">habilitado</text>
+  <rect x="452" y="458" width="468" height="198" rx="28" fill="#0D213B" stroke="#1D4457"/>
+  <text x="484" y="504" fill="#EDF7F3" font-size="28" font-family="Arial, sans-serif" font-weight="700">Painel de tarefas</text>
+  <rect x="484" y="532" width="404" height="50" rx="14" fill="#08131F" stroke="#2A4256"/>
+  <rect x="484" y="594" width="404" height="32" rx="12" fill="#112944"/>
+  <text x="506" y="616" fill="#D4FFF7" font-size="18" font-family="Courier New, monospace">Validar painel</text>
+  <rect x="948" y="458" width="254" height="198" rx="28" fill="#0D213B" stroke="#1D4457"/>
+  <text x="980" y="504" fill="#EDF7F3" font-size="28" font-family="Arial, sans-serif" font-weight="700">Administracao</text>
+  <rect x="980" y="534" width="190" height="30" rx="15" fill="#112944"/>
+  <rect x="980" y="576" width="190" height="30" rx="15" fill="#112944"/>
+  <rect x="980" y="618" width="190" height="30" rx="15" fill="#112944"/>
+  <text x="1000" y="554" fill="#A7C1BB" font-size="16" font-family="Arial, sans-serif">Usuarios do sistema</text>
+  <text x="1000" y="596" fill="#A7C1BB" font-size="16" font-family="Arial, sans-serif">Tarefas do sistema</text>
+  <text x="1000" y="638" fill="#A7C1BB" font-size="16" font-family="Arial, sans-serif">Console de integracao</text>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="720" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A2530"/>
+      <stop offset="0.48" stop-color="#08172B"/>
+      <stop offset="1" stop-color="#06111E"/>
+    </linearGradient>
+  </defs>
+</svg>
