@@ -27,6 +27,20 @@
 @REM   MVNW_VERBOSE - true: enable verbose log; others: silence the output
 @REM ----------------------------------------------------------------------------
 
+@REM Prefer a locally installed Maven on Windows when available.
+@IF NOT "%MAVEN_HOME%"=="" (
+  IF EXIST "%MAVEN_HOME%\bin\mvn.cmd" (
+    CALL "%MAVEN_HOME%\bin\mvn.cmd" %*
+    EXIT /B %ERRORLEVEL%
+  )
+)
+@FOR %%I IN (mvn.cmd) DO @(
+  IF NOT "%%~$PATH:I"=="" (
+    CALL "%%~$PATH:I" %*
+    EXIT /B %ERRORLEVEL%
+  )
+)
+
 @IF "%__MVNW_ARG0_NAME__%"=="" (SET __MVNW_ARG0_NAME__=%~nx0)
 @SET __MVNW_CMD__=
 @SET __MVNW_ERROR__=

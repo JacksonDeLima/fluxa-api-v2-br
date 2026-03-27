@@ -18,6 +18,8 @@ services:
       - postgres_data:/var/lib/postgresql/data
 
   fluxa-api:
+    profiles:
+      - fullstack
     build:
       context: .
     container_name: fluxa-api

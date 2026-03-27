@@ -228,6 +228,8 @@ graph TD
 docker compose up -d
 ```
 
+Por padrao, esse comando sobe apenas o `postgres` para desenvolvimento local.
+
 ### 2. Execute a aplicacao
 
 Variaveis opcionais de ambiente:
@@ -276,18 +278,18 @@ Variaveis opcionais para rate limiting:
 ### Docker
 
 - `Dockerfile` multi-stage para build e runtime com Java 17
-- `docker-compose.yml` com `postgres`, `fluxa-api` e healthchecks
+- `docker-compose.yml` com `postgres` por padrao e `fluxa-api` opcional no profile `fullstack`
 
-Para subir a stack:
+Para subir a stack completa em containers:
 
 ```bash
-docker compose up --build
+docker compose --profile fullstack up --build
 ```
 
 No Windows PowerShell:
 
 ```powershell
-.\mvnw spring-boot:run
+.\mvnw.cmd spring-boot:run
 ```
 
 No macOS ou Linux:
