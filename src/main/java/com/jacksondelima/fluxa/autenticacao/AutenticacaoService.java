@@ -4,6 +4,7 @@ import com.jacksondelima.fluxa.autenticacao.dto.AutenticacaoResponseDTO;
 import com.jacksondelima.fluxa.autenticacao.dto.CadastroRequestDTO;
 import com.jacksondelima.fluxa.autenticacao.dto.LoginRequestDTO;
 import com.jacksondelima.fluxa.excecao.RegraDeNegocioException;
+import com.jacksondelima.fluxa.observabilidade.FluxaMetricsService;
 import com.jacksondelima.fluxa.seguranca.JwtService;
 import com.jacksondelima.fluxa.usuario.Perfil;
 import com.jacksondelima.fluxa.usuario.Usuario;
@@ -26,6 +27,7 @@ public class AutenticacaoService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final FluxaMetricsService fluxaMetricsService;
 
     @Transactional
     public void cadastrar(CadastroRequestDTO request) {
@@ -43,6 +45,7 @@ public class AutenticacaoService {
                 .build();
 
         usuarioRepository.save(usuario);
+        fluxaMetricsService.registrarCadastroComSucesso();
     }
 
     public AutenticacaoResponseDTO login(LoginRequestDTO request) {
@@ -56,6 +59,7 @@ public class AutenticacaoService {
         );
 
         String token = jwtService.generateToken(email);
+        fluxaMetricsService.registrarLoginComSucesso();
         return new AutenticacaoResponseDTO(token, "Bearer");
     }
 

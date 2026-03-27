@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name" defaultValue="fluxa-api"/>
+    <springProperty scope="context" name="ACTIVE_PROFILE" source="spring.profiles.active" defaultValue="default"/>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>{"timestamp":"%date{yyyy-MM-dd'T'HH:mm:ss.SSSXXX}","level":"%level","application":"${APP_NAME}","profile":"${ACTIVE_PROFILE}","logger":"%logger{36}","thread":"%thread","requestId":"%X{requestId:-}","method":"%X{httpMethod:-}","path":"%X{requestPath:-}","status":"%X{httpStatus:-}","durationMs":"%X{durationMs:-}","clientIp":"%X{clientIp:-}","user":"%X{userEmail:-}","message":"%replace(%replace(%msg){'"','\\"'}){'[\r\n]+',' '}"}%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

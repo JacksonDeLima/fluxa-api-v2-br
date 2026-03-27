@@ -1,6 +1,7 @@
 package com.jacksondelima.fluxa.tarefa;
 
 import com.jacksondelima.fluxa.excecao.RecursoNaoEncontradoException;
+import com.jacksondelima.fluxa.observabilidade.FluxaMetricsService;
 import com.jacksondelima.fluxa.seguranca.UsuarioAutenticadoService;
 import com.jacksondelima.fluxa.tarefa.dto.TarefaRequestDTO;
 import com.jacksondelima.fluxa.tarefa.dto.TarefaResponseDTO;
@@ -18,6 +19,7 @@ public class TarefaService {
 
     private final TarefaRepository tarefaRepository;
     private final UsuarioAutenticadoService usuarioAutenticadoService;
+    private final FluxaMetricsService fluxaMetricsService;
 
     @Transactional
     public TarefaResponseDTO criar(TarefaRequestDTO request) {
@@ -30,7 +32,9 @@ public class TarefaService {
                 .usuario(usuarioAutenticado)
                 .build();
 
-        return TarefaResponseDTO.from(tarefaRepository.save(tarefa));
+        TarefaResponseDTO response = TarefaResponseDTO.from(tarefaRepository.save(tarefa));
+        fluxaMetricsService.registrarTarefaCriada();
+        return response;
     }
 
     public List<TarefaResponseDTO> listarMinhas() {
@@ -56,7 +60,9 @@ public class TarefaService {
         tarefa.setTitulo(request.titulo().trim());
         tarefa.setDescricao(request.descricao().trim());
 
-        return TarefaResponseDTO.from(tarefaRepository.save(tarefa));
+        TarefaResponseDTO response = TarefaResponseDTO.from(tarefaRepository.save(tarefa));
+        fluxaMetricsService.registrarTarefaAtualizada();
+        return response;
     }
 
     @Transactional
@@ -64,6 +70,7 @@ public class TarefaService {
         Usuario usuario = usuarioAutenticadoService.buscar();
         Tarefa tarefa = buscarTarefaDoUsuario(id, usuario.getId());
         tarefaRepository.delete(tarefa);
+        fluxaMetricsService.registrarTarefaExcluida();
     }
 
     private Tarefa buscarTarefaDoUsuario(Long id, Long usuarioId) {

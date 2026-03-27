@@ -2,6 +2,7 @@ package com.jacksondelima.fluxa;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jacksondelima.fluxa.observabilidade.RateLimitingService;
 import com.jacksondelima.fluxa.tarefa.StatusTarefa;
 import com.jacksondelima.fluxa.tarefa.Tarefa;
 import com.jacksondelima.fluxa.tarefa.TarefaRepository;
@@ -43,10 +44,14 @@ class AdministracaoIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private RateLimitingService rateLimitingService;
+
     @BeforeEach
     void setUp() {
         tarefaRepository.deleteAll();
         usuarioRepository.deleteAll();
+        rateLimitingService.clear();
     }
 
     @Test

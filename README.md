@@ -34,7 +34,7 @@ Principais evolucoes da v2-BR:
 ## Roadmap
 
 - [ ] Testes unitarios e de integracao para garantir a qualidade do codigo.
-- [ ] Pipeline de CI/CD com GitHub Actions para automacao de builds e deploys.
+- [ ] Pipeline de CD com GitHub Actions para automacao de deploys.
 - [ ] Funcionalidades de colaboracao em tarefas (compartilhamento, comentarios).
 - [ ] Notificacoes por e-mail sobre atividades importantes.
 
@@ -131,6 +131,9 @@ graph TD
 
 - `GET /administracao/usuarios?page=0&size=20&termo=ana&perfil=USUARIO`
 - `GET /administracao/tarefas?page=0&size=20&status=CONCLUIDA&emailUsuario=ana@fluxa.com`
+- `GET /actuator/health`
+- `GET /actuator/health/readiness`
+- `GET /actuator/health/liveness`
 
 ## Exemplos de payload
 
@@ -242,6 +245,44 @@ Profiles disponiveis:
 - `dev`: perfil padrao para desenvolvimento local, com Swagger habilitado
 - `prod`: exige secrets via ambiente e desabilita Swagger/OpenAPI publico
 - `test`: usado pela suite automatizada com H2 em memoria
+
+## Observabilidade e protecao
+
+- `Actuator` habilitado com `health`, `liveness` e `readiness`
+- `GET /actuator/health/**` publico para probes
+- Demais endpoints de `actuator` protegidos para `ADMINISTRADOR`
+- `GET /actuator/prometheus` exposto para scrape e protegido por role administrativa
+- acesso dos endpoints de observabilidade controlado via `management.endpoints.access.default` e `management.endpoint.prometheus.access`
+- Logs estruturados em JSON no console com `requestId`, metodo, rota, status, duracao, IP e usuario
+- Header `X-Request-Id` devolvido em cada resposta
+- Rate limiting em memoria para autenticacao, area administrativa e APIs autenticadas
+- Metricas de negocio para login, cadastro, tarefas e rate limiting
+
+Variaveis opcionais para rate limiting:
+
+- `RATE_LIMIT_AUTH_MAX_REQUESTS`
+- `RATE_LIMIT_AUTH_WINDOW_SECONDS`
+- `RATE_LIMIT_ADMIN_MAX_REQUESTS`
+- `RATE_LIMIT_ADMIN_WINDOW_SECONDS`
+- `RATE_LIMIT_API_MAX_REQUESTS`
+- `RATE_LIMIT_API_WINDOW_SECONDS`
+
+## Operacao
+
+### CI
+
+- Workflow em `.github/workflows/ci.yml` executando `mvn test` em push e pull request
+
+### Docker
+
+- `Dockerfile` multi-stage para build e runtime com Java 17
+- `docker-compose.yml` com `postgres`, `fluxa-api` e healthchecks
+
+Para subir a stack:
+
+```bash
+docker compose up --build
+```
 
 No Windows PowerShell:
 

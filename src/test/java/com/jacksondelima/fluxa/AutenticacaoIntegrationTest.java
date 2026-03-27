@@ -2,6 +2,7 @@ package com.jacksondelima.fluxa;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jacksondelima.fluxa.observabilidade.RateLimitingService;
 import com.jacksondelima.fluxa.usuario.Perfil;
 import com.jacksondelima.fluxa.usuario.Usuario;
 import com.jacksondelima.fluxa.usuario.UsuarioRepository;
@@ -39,9 +40,13 @@ class AutenticacaoIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private RateLimitingService rateLimitingService;
+
     @BeforeEach
     void setUp() {
         usuarioRepository.deleteAll();
+        rateLimitingService.clear();
     }
 
     @Test
@@ -103,5 +108,43 @@ class AutenticacaoIntegrationTest {
         mockMvc.perform(get("/usuarios/eu"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.erro").value("autenticacao"));
+    }
+
+    @Test
+    void deveAplicarRateLimitNoLogin() throws Exception {
+        usuarioRepository.save(
+                Usuario.builder()
+                        .nome("Usuario Rate Limit")
+                        .email("rate@fluxa.com")
+                        .senha(passwordEncoder.encode("123456"))
+                        .perfil(Perfil.USUARIO)
+                        .build()
+        );
+
+        String body = """
+                {
+                  "email": "rate@fluxa.com",
+                  "senha": "123456"
+                }
+                """;
+
+        mockMvc.perform(post("/autenticacao/login")
+                        .header("X-Forwarded-For", "10.0.0.1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/autenticacao/login")
+                        .header("X-Forwarded-For", "10.0.0.1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/autenticacao/login")
+                        .header("X-Forwarded-For", "10.0.0.1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body))
+                .andExpect(status().isTooManyRequests())
+                .andExpect(jsonPath("$.erro").value("rate_limit"));
     }
 }

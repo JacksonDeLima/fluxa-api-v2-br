@@ -1,6 +1,7 @@
 package com.jacksondelima.fluxa;
 
 import com.jacksondelima.fluxa.excecao.RecursoNaoEncontradoException;
+import com.jacksondelima.fluxa.observabilidade.FluxaMetricsService;
 import com.jacksondelima.fluxa.seguranca.UsuarioAutenticadoService;
 import com.jacksondelima.fluxa.tarefa.StatusTarefa;
 import com.jacksondelima.fluxa.tarefa.Tarefa;
@@ -34,6 +35,9 @@ class TarefaServiceTest {
 
     @Mock
     private UsuarioAutenticadoService usuarioAutenticadoService;
+
+    @Mock
+    private FluxaMetricsService fluxaMetricsService;
 
     @InjectMocks
     private TarefaService tarefaService;

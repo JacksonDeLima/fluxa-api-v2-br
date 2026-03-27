@@ -2,6 +2,8 @@ package com.jacksondelima.fluxa.configuracao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jacksondelima.fluxa.excecao.ErroResponseDTO;
+import com.jacksondelima.fluxa.observabilidade.RateLimitingFilter;
+import com.jacksondelima.fluxa.observabilidade.RequestLoggingFilter;
 import com.jacksondelima.fluxa.seguranca.CustomUserDetailsService;
 import com.jacksondelima.fluxa.seguranca.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
@@ -26,6 +28,8 @@ import java.time.Instant;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final RateLimitingFilter rateLimitingFilter;
+    private final RequestLoggingFilter requestLoggingFilter;
     private final CustomUserDetailsService customUserDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final ObjectMapper objectMapper;
@@ -39,6 +43,8 @@ public class SecurityConfig {
                                 "/",
                                 "/index.html",
                                 "/assets/**",
+                                "/actuator/health",
+                                "/actuator/health/**",
                                 "/error",
                                 "/favicon.ico",
                                 "/autenticacao/**",
@@ -47,6 +53,7 @@ public class SecurityConfig {
                                 "/v3/api-docs",
                                 "/v3/api-docs/**"
                         ).permitAll()
+                        .requestMatchers("/actuator/**").hasRole("ADMINISTRADOR")
                         .requestMatchers("/administracao/**").hasRole("ADMINISTRADOR")
                         .requestMatchers("/tarefas/**").hasAnyRole("USUARIO", "ADMINISTRADOR")
                         .requestMatchers("/usuarios/**").authenticated()
@@ -76,7 +83,9 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(requestLoggingFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(rateLimitingFilter, JwtAuthenticationFilter.class);
 
         return http.build();
     }

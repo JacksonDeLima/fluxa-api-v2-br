@@ -3,6 +3,7 @@ package com.jacksondelima.fluxa.administracao;
 import com.jacksondelima.fluxa.tarefa.StatusTarefa;
 import com.jacksondelima.fluxa.tarefa.TarefaRepository;
 import com.jacksondelima.fluxa.tarefa.dto.TarefaResponseDTO;
+import com.jacksondelima.fluxa.observabilidade.FluxaMetricsService;
 import com.jacksondelima.fluxa.usuario.Perfil;
 import com.jacksondelima.fluxa.usuario.UsuarioRepository;
 import com.jacksondelima.fluxa.usuario.dto.UsuarioResponseDTO;
@@ -21,9 +22,12 @@ public class AdministracaoService {
 
     private final UsuarioRepository usuarioRepository;
     private final TarefaRepository tarefaRepository;
+    private final FluxaMetricsService fluxaMetricsService;
 
     public Page<UsuarioResponseDTO> listarUsuarios(String termo, Perfil perfil, Pageable pageable) {
-        return usuarioRepository.buscarParaAdministracao(normalizarTexto(termo), perfil, pageable);
+        return fluxaMetricsService.medirListagemUsuarios(
+                () -> usuarioRepository.buscarParaAdministracao(normalizarTexto(termo), perfil, pageable)
+        );
     }
 
     public Page<TarefaResponseDTO> listarTarefas(
@@ -32,11 +36,13 @@ public class AdministracaoService {
             String emailUsuario,
             Pageable pageable
     ) {
-        return tarefaRepository.buscarParaAdministracao(
-                normalizarTexto(termo),
-                status,
-                normalizarEmail(emailUsuario),
-                pageable
+        return fluxaMetricsService.medirListagemTarefas(
+                () -> tarefaRepository.buscarParaAdministracao(
+                        normalizarTexto(termo),
+                        status,
+                        normalizarEmail(emailUsuario),
+                        pageable
+                )
         );
     }
 
