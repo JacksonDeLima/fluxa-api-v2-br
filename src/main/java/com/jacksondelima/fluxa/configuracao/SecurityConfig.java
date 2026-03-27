@@ -1,6 +1,7 @@
 package com.jacksondelima.fluxa.configuracao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jacksondelima.fluxa.excecao.ErroResponseDTO;
 import com.jacksondelima.fluxa.seguranca.CustomUserDetailsService;
 import com.jacksondelima.fluxa.seguranca.JwtAuthenticationFilter;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,8 +20,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
@@ -40,6 +39,7 @@ public class SecurityConfig {
                                 "/",
                                 "/index.html",
                                 "/assets/**",
+                                "/error",
                                 "/favicon.ico",
                                 "/autenticacao/**",
                                 "/swagger-ui/**",
@@ -50,7 +50,6 @@ public class SecurityConfig {
                         .requestMatchers("/administracao/**").hasRole("ADMINISTRADOR")
                         .requestMatchers("/tarefas/**").hasAnyRole("USUARIO", "ADMINISTRADOR")
                         .requestMatchers("/usuarios/**").authenticated()
-                        .requestMatchers("/teste").authenticated()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception
@@ -102,16 +101,12 @@ public class SecurityConfig {
             String mensagem,
             String caminho
     ) throws IOException {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("erro", erro);
-        body.put("mensagem", mensagem);
-        body.put("status", status);
-        body.put("caminho", caminho);
-        body.put("timestamp", Instant.now().toString());
-
         response.setStatus(status);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        objectMapper.writeValue(response.getWriter(), body);
+        objectMapper.writeValue(
+                response.getWriter(),
+                new ErroResponseDTO(erro, mensagem, status, caminho, Instant.now())
+        );
     }
 }

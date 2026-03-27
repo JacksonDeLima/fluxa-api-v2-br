@@ -5,7 +5,9 @@ const state = {
     openApi: null,
     tasks: [],
     adminUsers: [],
-    adminTasks: []
+    adminTasks: [],
+    adminUsersTotal: 0,
+    adminTasksTotal: 0
 };
 
 const ui = {
@@ -190,8 +192,8 @@ function renderAdmin() {
     ui.adminContent.hidden = false;
     setFeedback(ui.adminFeedback, "Dados administrativos carregados com sucesso.", "success");
 
-    ui.adminUsersCount.textContent = `${state.adminUsers.length} usuarios`;
-    ui.adminTasksCount.textContent = `${state.adminTasks.length} tarefas`;
+    ui.adminUsersCount.textContent = `${state.adminUsersTotal} usuarios`;
+    ui.adminTasksCount.textContent = `${state.adminTasksTotal} tarefas`;
 
     ui.adminUsersBody.innerHTML = state.adminUsers.map((user) => `
         <tr>
@@ -249,6 +251,8 @@ async function loadProfileAndData() {
         state.tasks = [];
         state.adminUsers = [];
         state.adminTasks = [];
+        state.adminUsersTotal = 0;
+        state.adminTasksTotal = 0;
         state.isAdmin = false;
         applySessionUi();
         renderTasks();
@@ -258,7 +262,7 @@ async function loadProfileAndData() {
 
     try {
         const usuarioResponse = await api("/usuarios/eu");
-        state.userEmail = usuarioResponse.email || usuarioResponse;
+        state.userEmail = usuarioResponse.email;
         state.tasks = await api("/tarefas");
     } catch (error) {
         state.token = "";
@@ -271,12 +275,18 @@ async function loadProfileAndData() {
     }
 
     try {
-        state.adminUsers = await api("/administracao/usuarios");
-        state.adminTasks = await api("/administracao/tarefas");
+        const adminUsersResponse = await api("/administracao/usuarios");
+        const adminTasksResponse = await api("/administracao/tarefas");
+        state.adminUsers = adminUsersResponse.content || adminUsersResponse;
+        state.adminTasks = adminTasksResponse.content || adminTasksResponse;
+        state.adminUsersTotal = adminUsersResponse.totalElements ?? state.adminUsers.length;
+        state.adminTasksTotal = adminTasksResponse.totalElements ?? state.adminTasks.length;
         state.isAdmin = true;
     } catch (error) {
         state.adminUsers = [];
         state.adminTasks = [];
+        state.adminUsersTotal = 0;
+        state.adminTasksTotal = 0;
         state.isAdmin = false;
     }
 
@@ -313,7 +323,7 @@ async function handleRegister(event) {
     const formData = new FormData(event.currentTarget);
 
     try {
-        const message = await api("/autenticacao/cadastro", {
+        const payload = await api("/autenticacao/cadastro", {
             method: "POST",
             auth: false,
             body: {
@@ -323,7 +333,7 @@ async function handleRegister(event) {
             }
         });
 
-        setFeedback(ui.authFeedback, typeof message === "string" ? message : "Usuario cadastrado com sucesso.", "success");
+        setFeedback(ui.authFeedback, payload.mensagem || "Usuario cadastrado com sucesso.", "success");
         event.currentTarget.reset();
     } catch (error) {
         setFeedback(ui.authFeedback, error.message, "error");
@@ -403,6 +413,8 @@ function logout() {
     state.tasks = [];
     state.adminUsers = [];
     state.adminTasks = [];
+    state.adminUsersTotal = 0;
+    state.adminTasksTotal = 0;
     state.isAdmin = false;
     persistToken();
     resetTaskForm();

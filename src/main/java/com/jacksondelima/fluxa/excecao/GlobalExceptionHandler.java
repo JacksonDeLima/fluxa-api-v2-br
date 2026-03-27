@@ -1,117 +1,109 @@
 package com.jacksondelima.fluxa.excecao;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<Map<String, Object>> handleBadCredentials(
+    public ResponseEntity<ErroResponseDTO> handleBadCredentials(
             BadCredentialsException ex,
             HttpServletRequest request
     ) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(criarCorpoErro(
-                        "autenticação",
-                        "Credenciais inválidas.",
-                        HttpStatus.UNAUTHORIZED,
-                        request.getRequestURI()
-                ));
+        return responder("autenticacao", "Credenciais invalidas.", HttpStatus.UNAUTHORIZED, request);
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<Map<String, Object>> handleAccessDenied(
-            AccessDeniedException ex,
-            HttpServletRequest request
-    ) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(criarCorpoErro(
-                        "acesso_negado",
-                        "Acesso negado para este recurso.",
-                        HttpStatus.FORBIDDEN,
-                        request.getRequestURI()
-                ));
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, Object>> handleRuntimeException(
-            RuntimeException ex,
-            HttpServletRequest request
-    ) {
-        return ResponseEntity.badRequest().body(
-                criarCorpoErro("negócio", ex.getMessage(), HttpStatus.BAD_REQUEST, request.getRequestURI())
-        );
-    }
-
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNotFound(
-            EntityNotFoundException ex,
-            HttpServletRequest request
-    ) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                criarCorpoErro("nao_encontrado", ex.getMessage() != null ? ex.getMessage() : "Recurso não encontrado.", HttpStatus.NOT_FOUND, request.getRequestURI())
-        );
-    }
-
-    @ExceptionHandler(DataIntegrityViolationException.class)
-    public ResponseEntity<Map<String, Object>> handleConflict(
-            DataIntegrityViolationException ex,
-            HttpServletRequest request
-    ) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(
-                criarCorpoErro("conflito", "Violação de integridade de dados (ex: e-mail já cadastrado).", HttpStatus.CONFLICT, request.getRequestURI())
-        );
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> handleGeneric(
+    @ExceptionHandler({InsufficientAuthenticationException.class, UsernameNotFoundException.class})
+    public ResponseEntity<ErroResponseDTO> handleUnauthorized(
             Exception ex,
             HttpServletRequest request
     ) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                criarCorpoErro("erro_interno", "Ocorreu um erro interno no servidor.", HttpStatus.INTERNAL_SERVER_ERROR, request.getRequestURI())
+        return responder("autenticacao", "Usuario nao autenticado.", HttpStatus.UNAUTHORIZED, request);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErroResponseDTO> handleAccessDenied(
+            AccessDeniedException ex,
+            HttpServletRequest request
+    ) {
+        return responder("acesso_negado", "Acesso negado para este recurso.", HttpStatus.FORBIDDEN, request);
+    }
+
+    @ExceptionHandler(RegraDeNegocioException.class)
+    public ResponseEntity<ErroResponseDTO> handleBusinessException(
+            RegraDeNegocioException ex,
+            HttpServletRequest request
+    ) {
+        return responder("negocio", ex.getMessage(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(RecursoNaoEncontradoException.class)
+    public ResponseEntity<ErroResponseDTO> handleNotFound(
+            RecursoNaoEncontradoException ex,
+            HttpServletRequest request
+    ) {
+        return responder("nao_encontrado", ex.getMessage(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErroResponseDTO> handleConflict(
+            DataIntegrityViolationException ex,
+            HttpServletRequest request
+    ) {
+        return responder(
+                "conflito",
+                "Violacao de integridade de dados. Revise os dados enviados e tente novamente.",
+                HttpStatus.CONFLICT,
+                request
         );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidationException(
+    public ResponseEntity<ErroResponseDTO> handleValidationException(
             MethodArgumentNotValidException ex,
             HttpServletRequest request
     ) {
         String mensagem = ex.getBindingResult().getFieldError() != null
                 ? ex.getBindingResult().getFieldError().getDefaultMessage()
-                : "Falha de validação.";
+                : "Falha de validacao.";
 
-        return ResponseEntity.badRequest().body(
-                criarCorpoErro("validação", mensagem, HttpStatus.BAD_REQUEST, request.getRequestURI())
-        );
+        return responder("validacao", mensagem, HttpStatus.BAD_REQUEST, request);
     }
 
-    private Map<String, Object> criarCorpoErro(
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErroResponseDTO> handleGeneric(
+            Exception ex,
+            HttpServletRequest request
+    ) {
+        return responder("erro_interno", "Ocorreu um erro interno no servidor.", HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+
+    private ResponseEntity<ErroResponseDTO> responder(
             String erro,
             String mensagem,
             HttpStatus status,
-            String caminho
+            HttpServletRequest request
     ) {
-        Map<String, Object> body = new LinkedHashMap<>();
-        body.put("erro", erro);
-        body.put("mensagem", mensagem);
-        body.put("status", status.value());
-        body.put("caminho", caminho);
-        body.put("timestamp", Instant.now().toString());
-        return body;
+        return ResponseEntity.status(status).body(
+                new ErroResponseDTO(
+                        erro,
+                        mensagem,
+                        status.value(),
+                        request.getRequestURI(),
+                        Instant.now()
+                )
+        );
     }
 }

@@ -104,6 +104,7 @@ graph TD
 - Bean Validation
 - PostgreSQL
 - SpringDoc OpenAPI
+- Flyway
 - Lombok
 - Docker Compose
 
@@ -128,8 +129,8 @@ graph TD
 
 ### Administracao
 
-- `GET /administracao/usuarios`
-- `GET /administracao/tarefas`
+- `GET /administracao/usuarios?page=0&size=20&termo=ana&perfil=USUARIO`
+- `GET /administracao/tarefas?page=0&size=20&status=CONCLUIDA&emailUsuario=ana@fluxa.com`
 
 ## Exemplos de payload
 
@@ -173,6 +174,43 @@ graph TD
 }
 ```
 
+### Resposta de cadastro
+
+```json
+{
+  "mensagem": "Usuario cadastrado com sucesso."
+}
+```
+
+### Resposta de usuario autenticado
+
+```json
+{
+  "id": 1,
+  "nome": "Maria Silva",
+  "email": "maria@fluxa.com",
+  "perfil": "USUARIO"
+}
+```
+
+### Resposta paginada de administracao
+
+```json
+{
+  "content": [
+    {
+      "email": "ana@fluxa.com"
+    }
+  ],
+  "page": {
+    "size": 20,
+    "number": 0
+  },
+  "totalElements": 1,
+  "totalPages": 1
+}
+```
+
 ## Como executar localmente
 
 ### Pre-requisitos
@@ -188,6 +226,22 @@ docker compose up -d
 ```
 
 ### 2. Execute a aplicacao
+
+Variaveis opcionais de ambiente:
+
+- `DB_URL`
+- `DB_USERNAME`
+- `DB_PASSWORD`
+- `DB_POOL_SIZE`
+- `DB_MIN_IDLE`
+- `JWT_SECRET`
+- `JWT_EXPIRATION_MS`
+
+Profiles disponiveis:
+
+- `dev`: perfil padrao para desenvolvimento local, com Swagger habilitado
+- `prod`: exige secrets via ambiente e desabilita Swagger/OpenAPI publico
+- `test`: usado pela suite automatizada com H2 em memoria
 
 No Windows PowerShell:
 
@@ -233,6 +287,7 @@ powershell -ExecutionPolicy Bypass -File .\scripts\inspecionar-porta.ps1 -Porta 
 
 - O painel administrativo depende de um token com perfil `ADMINISTRADOR`
 - O cadastro publico cria usuarios comuns
+- O schema do banco agora e controlado por migrations em `src/main/resources/db/migration`
 - A interface web e servida diretamente por `src/main/resources/static`
 - O Swagger continua disponivel para exploracao tecnica da API
 

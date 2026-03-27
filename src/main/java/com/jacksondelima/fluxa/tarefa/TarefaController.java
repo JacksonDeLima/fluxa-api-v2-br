@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,7 @@ public class TarefaController {
     @PostMapping
     @Operation(summary = "Criar nova tarefa")
     public ResponseEntity<TarefaResponseDTO> criar(@RequestBody @Valid TarefaRequestDTO request) {
-        return ResponseEntity.ok(tarefaService.criar(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(tarefaService.criar(request));
     }
 
     @GetMapping
@@ -55,8 +56,8 @@ public class TarefaController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Excluir tarefa")
-    public ResponseEntity<String> excluir(@PathVariable Long id) {
+    public ResponseEntity<Void> excluir(@PathVariable Long id) {
         tarefaService.excluir(id);
-        return ResponseEntity.ok("Tarefa excluida com sucesso.");
+        return ResponseEntity.noContent().build();
     }
 }
